@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Web.API.Demo.Dto;
 using Web.API.Demo.Interfaces;
 using Web.API.Demo.Models;
 
@@ -10,15 +12,17 @@ namespace Web.API.Demo.Controllers
     public class StudentsController : ControllerBase
     {
         private readonly IStudentRepository _studentRepository;
-        public StudentsController(IStudentRepository studentRepository)
+        private readonly IMapper _mapper;
+        public StudentsController(IStudentRepository studentRepository, IMapper mapper)
         {
             _studentRepository = studentRepository;
+            _mapper = mapper;
         }
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Student>))]
         public IActionResult GetAllStudent()
         {
-            var students = _studentRepository.GetAllStudent();
+            var students = _mapper.Map<List<StudentDto>>(_studentRepository.GetAllStudent());
             if(ModelState.IsValid)
             {
                 return Ok(students);
@@ -35,7 +39,7 @@ namespace Web.API.Demo.Controllers
             {
                 return NotFound();
             }
-            var st = _studentRepository.GetStudent(id);
+            var st = _mapper.Map<StudentDto>(_studentRepository.GetStudent(id));
             if (ModelState.IsValid)
             {
                 return Ok(st);
@@ -46,7 +50,7 @@ namespace Web.API.Demo.Controllers
         [ProducesResponseType(200, Type = typeof(Student))]
         public IActionResult GetByName(string name)
         {
-            var st = _studentRepository.GetByName(name);
+            var st = _mapper.Map<StudentDto>(_studentRepository.GetByName(name));
             if(!ModelState.IsValid) return NotFound();
             return Ok(st);
         }
@@ -55,7 +59,7 @@ namespace Web.API.Demo.Controllers
         [ProducesResponseType(400)]
         public IActionResult GetByGender(bool IsMale)
         {
-            var st = _studentRepository.GetByGender(IsMale);
+            var st = _mapper.Map<List<StudentDto>>(_studentRepository.GetByGender(IsMale));
             if(ModelState.IsValid)
             {
                 return Ok(st);  
