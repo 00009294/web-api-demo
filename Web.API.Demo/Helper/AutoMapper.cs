@@ -9,6 +9,7 @@ namespace Web.API.Demo.Helper
         public AutoMapper()
         {
             CreateMap<Student, StudentDto>();
+            CreateMap<Subject, SubjectDto>();
         }
     }
 }

@@ -35,7 +35,7 @@ namespace Web.API.Demo.Controllers
         [ProducesResponseType(400)]
         public IActionResult GetStudent(int id)
         {
-            if(!_studentRepository.IsExists(id))
+            if(!_studentRepository.IsExist(id))
             {
                 return NotFound();
             }

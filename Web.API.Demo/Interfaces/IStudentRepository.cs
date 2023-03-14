@@ -8,6 +8,6 @@ namespace Web.API.Demo.Interfaces
         Student GetStudent(int id);
         Student GetByName(string name);
         ICollection<Student> GetByGender(bool isMale);
-        bool IsExists(int id);
+        bool IsExist(int id);
     }
 }

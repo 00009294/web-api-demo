@@ -33,7 +33,7 @@ namespace Web.API.Demo.Repositories
             return _appDbContext.Students.Where(s => s.Name == name).FirstOrDefault();
         }
 
-        public bool IsExists(int id)
+        public bool IsExist(int id)
         {
             return _appDbContext.Students.Where(s=>s.Id == id).Any();
         }
