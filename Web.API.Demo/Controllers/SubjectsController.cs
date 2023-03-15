@@ -14,7 +14,7 @@ namespace Web.API.Demo.Controllers
         private readonly ISubjectRepository _subjectRepository;
         private readonly IMapper _mapper;
 
-        public SubjectsController(ISubjectRepository subjectRepository, IMapper mapper)
+        public SubjectsController (ISubjectRepository subjectRepository, IMapper mapper)
         {
             _subjectRepository = subjectRepository;
             _mapper = mapper;
