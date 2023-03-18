@@ -33,5 +33,16 @@ namespace Web.API.Demo.Repositories
         {
             return _appDbContext.Subjects.OrderBy(s => s.Id==id).Any();
         }
+
+
+        public ICollection<Teacher> GetTeacherBySubject(int subjectId)
+        {
+            return _appDbContext.Teachers.Where(t=>t.Subject.Id==subjectId).ToList();
+        }
+
+        public ICollection<Subject> GetSubjectByStudent(int studentId)
+        {
+            return _appDbContext.StudentSubjects.Where(st => st.Student.Id == studentId).Select(st => st.Subject).ToList();
+        }
     }
 }

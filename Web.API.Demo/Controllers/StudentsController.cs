@@ -66,6 +66,16 @@ namespace Web.API.Demo.Controllers
             }
             return BadRequest(ModelState);
         }
-
+        [HttpPost]
+        [ProducesResponseType(200, Type = typeof(StudentDto))]
+        public IActionResult CreateStudent(Student student)
+        {
+            var st = _studentRepository.CreateStudent(student);
+            if (ModelState.IsValid)
+            {
+                return Ok("Success");
+            }
+            return BadRequest(ModelState);
+        }
     }
 }

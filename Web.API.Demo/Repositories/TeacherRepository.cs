@@ -27,6 +27,16 @@ namespace Web.API.Demo.Repositories
             return _appDbContext.Teachers.Where(t => t.Name == name).FirstOrDefault();
         }
 
+        public ICollection<Student> GetStudentByTeacher(int teacherId)
+        {
+            return _appDbContext.StudentTeachers.Where(t=>t.Teacher.Id == teacherId).Select(s=>s.Student).ToList();
+        }
+
+        public Subject GetSubjectByTeacher(int teacherId)
+        {
+            return _appDbContext.Teachers.Where(t => t.Id == teacherId).Select(s=>s.Subject).FirstOrDefault();
+        }
+
         public Teacher GetTeacher(int id)
         {
             return _appDbContext.Teachers.Where(t => t.Id == id).FirstOrDefault();

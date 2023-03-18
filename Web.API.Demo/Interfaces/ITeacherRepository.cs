@@ -7,6 +7,8 @@ namespace Web.API.Demo.Interfaces
         ICollection<Teacher> GetAllTeacher();
         Teacher GetTeacher(int id);
         Teacher GetByName (string name);
+        Subject GetSubjectByTeacher(int teacherId);
+        ICollection<Student> GetStudentByTeacher(int teacherId);
         ICollection<Teacher> GetByGender(bool isMale);
         bool IsExist(int id);
 

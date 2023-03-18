@@ -8,6 +8,8 @@ namespace Web.API.Demo.Interfaces
         Subject GetSubject(int id);
         Subject GetByName(string name);
         ICollection<Subject> GetByCore(bool IsCore);
+        ICollection<Teacher> GetTeacherBySubject (int subjectId);
+        ICollection<Subject> GetSubjectByStudent (int studentId);
         bool IsExist(int id);
 
     }

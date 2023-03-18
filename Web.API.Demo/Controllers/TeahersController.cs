@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Web.API.Demo.DbContexts;
+using Web.API.Demo.Dto;
 using Web.API.Demo.Interfaces;
 using Web.API.Demo.Models;
 using Web.API.Demo.Repositories;
@@ -25,7 +26,7 @@ namespace Web.API.Demo.Controllers
         [ProducesResponseType(200, Type = typeof(IEnumerable<Teacher>))]
         public IActionResult GetAllTeacher()
         {
-            var teachers = _teacherRepository.GetAllTeacher();
+            var teachers = _mapper.Map<List<TeacherDto>>(_teacherRepository.GetAllTeacher());
             if (ModelState.IsValid)
             {
                 return Ok(teachers);
@@ -36,7 +37,7 @@ namespace Web.API.Demo.Controllers
         [ProducesResponseType(200, Type = typeof(Teacher))]
         public IActionResult GetTeacher(int id)
         {
-            var teacher = _teacherRepository.GetTeacher(id);
+            var teacher = _mapper.Map<TeacherDto>(_teacherRepository.GetTeacher(id));
             if (ModelState.IsValid)
             {
                 return Ok(teacher);
@@ -47,10 +48,21 @@ namespace Web.API.Demo.Controllers
         [ProducesResponseType(200, Type = typeof(Teacher))]
         public IActionResult GetByName(string name)
         {
-            var teacher = _teacherRepository.GetByName(name);
+            var teacher = _mapper.Map<TeacherDto>(_teacherRepository.GetByName(name));
             if (ModelState.IsValid)
             {
                 return Ok(teacher);
+            }
+            return BadRequest(ModelState);
+        }
+        [HttpGet("{isMale}")]
+        [ProducesResponseType(200, Type=typeof(IEnumerable<Teacher>))]
+        public IActionResult GetByGender(bool isMale)
+        {
+            var teachers = _mapper.Map<List<Teacher>>(_teacherRepository.GetByGender(isMale).ToList());
+            if (ModelState.IsValid)
+            {
+                return Ok(teachers);
             }
             return BadRequest(ModelState);
         }
