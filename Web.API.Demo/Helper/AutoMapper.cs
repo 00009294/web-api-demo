@@ -10,6 +10,7 @@ namespace Web.API.Demo.Helper
         {
             CreateMap<Student, StudentDto>();
             CreateMap<Subject, SubjectDto>();
+            CreateMap<Teacher , TeacherDto>();
         }
     }
 }
