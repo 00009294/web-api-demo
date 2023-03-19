@@ -14,7 +14,7 @@ namespace Web.API.Demo.Controllers
         private readonly ISubjectRepository _subjectRepository;
         private readonly IMapper _mapper;
 
-        public SubjectsController (ISubjectRepository subjectRepository, IMapper mapper)
+        public SubjectsController(ISubjectRepository subjectRepository, IMapper mapper)
         {
             _subjectRepository = subjectRepository;
             _mapper = mapper;
@@ -71,6 +71,29 @@ namespace Web.API.Demo.Controllers
             }
             return BadRequest(ModelState);
         }
-
+        [HttpPost]
+        [ProducesResponseType(200)]
+        public IActionResult CreateStudent([FromBody] SubjectDto subject)
+        {
+            if (subject == null) return BadRequest(ModelState);
+            var sb = _subjectRepository.GetAllSubject().Where(s=>s.Name.Trim().ToUpper() == subject.Name.Trim().ToUpper()).FirstOrDefault();
+            if(sb != null)
+            {
+                ModelState.AddModelError("", "Already exists");
+                return BadRequest(ModelState);
+            }
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Not all completed!!!");
+                return BadRequest(ModelState);
+            }
+            var createdSubject = _mapper.Map<Subject>(subject);
+            if (!_subjectRepository.CreateSubject(createdSubject))
+            {
+                ModelState.AddModelError("", "Smth went wrong while saving");
+                return BadRequest(ModelState);      
+            }
+            return Ok("Successfully added");
+        }
     }
 }

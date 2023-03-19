@@ -68,13 +68,56 @@ namespace Web.API.Demo.Controllers
         }
         [HttpPost]
         [ProducesResponseType(200, Type = typeof(StudentDto))]
-        public IActionResult CreateStudent(Student student)
+        public IActionResult CreateStudent([FromBody]StudentDto student)
         {
-            var st = _studentRepository.CreateStudent(student);
-            if (ModelState.IsValid)
+            //var st = _studentRepository.CreateStudent(student);
+            //if (ModelState.IsValid)
+            //{
+            //    return Ok("Success");
+            //}
+            //return BadRequest(ModelState);
+            // null
+            // unique
+            // valid
+            // saved
+            //if (student == null)
+            //{
+            //    return BadRequest(ModelState);
+            //}
+            //var st = _studentRepository.GetAllStudent().Where(s => s.Name.Trim().ToUpper() == student.Name.Trim().ToUpper()).FirstOrDefault();
+            //if (st != null)
+            //{
+            //    ModelState.AddModelError("", "Already exists");
+            //    return StatusCode(400, ModelState);
+            //}
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest(ModelState);
+            //}
+            //var cretedStudent = _mapper.Map<Student>(student);
+            //if (!_studentRepository.CreateStudent(cretedStudent))
+            //{
+            //    ModelState.AddModelError("", "Smth went wrong while saving");
+            //    return BadRequest(ModelState);
+            //}
+            //return Ok("Successfully added");
+            if (student == null) return BadRequest(ModelState);
+            var st = _studentRepository.GetAllStudent().Where(s => s.Name.Trim().ToUpper() == student.Name.Trim().ToUpper()).FirstOrDefault();
+            if (st != null)
             {
-                return Ok("Success");
+                ModelState.AddModelError("", "Already exists");
+                return BadRequest(ModelState);
             }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var createdStudent = _mapper.Map<Student>(student);
+            if (_studentRepository.CreateStudent(createdStudent))
+            {
+                return Ok("Successfully created");
+            }
+            ModelState.AddModelError("", "Smth went wrong while saving");
             return BadRequest(ModelState);
         }
     }

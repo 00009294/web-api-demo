@@ -12,6 +12,13 @@ namespace Web.API.Demo.Repositories
         {
             _appDbContext = appDbContext;
         }
+
+        public bool CreateTeacher(Teacher teacher)
+        {
+            _appDbContext.Teachers.Add(teacher);
+            return Save();
+        }
+
         public ICollection<Teacher> GetAllTeacher()
         {
             return _appDbContext.Teachers.ToList();
@@ -45,6 +52,11 @@ namespace Web.API.Demo.Repositories
         public bool IsExist(int id)
         {
             return _appDbContext.Teachers.Where(t=>t.Id == id) != null;
+        }
+
+        public bool Save()
+        {
+            return _appDbContext.SaveChanges() > 0 ? true : false;
         }
     }
 }

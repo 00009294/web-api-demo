@@ -12,5 +12,6 @@ namespace Web.API.Demo.Interfaces
         ICollection<Student> GetStudentBySubject(int subjectId);
         ICollection<Student> GetStudentByTeachers(int teacherId);
         bool IsExist(int id);
+        bool Save();
     }
 }

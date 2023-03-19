@@ -44,5 +44,16 @@ namespace Web.API.Demo.Repositories
         {
             return _appDbContext.StudentSubjects.Where(st => st.Student.Id == studentId).Select(st => st.Subject).ToList();
         }
+
+        public bool CreateSubject(Subject subject)
+        {
+            _appDbContext.Subjects.Add(subject);
+            return Save();
+        }
+
+        public bool Save()
+        {
+            return _appDbContext.SaveChanges() > 0 ? true : false;
+        }
     }
 }

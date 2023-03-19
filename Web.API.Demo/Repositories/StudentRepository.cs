@@ -41,7 +41,8 @@ namespace Web.API.Demo.Repositories
 
         public bool CreateStudent(Student student)
         {
-            return _appDbContext.Students.Add(student) != null;
+            _appDbContext.Students.Add(student);
+            return Save();
         }
 
         public ICollection<Student> GetStudentBySubject(int subjectId)
@@ -52,6 +53,11 @@ namespace Web.API.Demo.Repositories
         public ICollection<Student> GetStudentByTeachers(int teacherId)
         {
             return _appDbContext.StudentTeachers.Where(t=>t.Teacher.Id == teacherId).Select(t=>t.Student).ToList();
+        }
+
+        public bool Save()
+        {
+            return _appDbContext.SaveChanges()>0 ? true : false;
         }
     }
 }
