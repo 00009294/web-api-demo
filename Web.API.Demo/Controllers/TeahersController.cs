@@ -15,11 +15,13 @@ namespace Web.API.Demo.Controllers
     public class TeachersController : ControllerBase
     {
         private readonly ITeacherRepository _teacherRepository;
+        private readonly ISubjectRepository _subjectRepository;
         private readonly IMapper _mapper;
 
-        public TeachersController(ITeacherRepository teacherRepository, IMapper mapper)
+        public TeachersController(ITeacherRepository teacherRepository,ISubjectRepository subjectRepository, IMapper mapper)
         {
             _teacherRepository = teacherRepository;
+            _subjectRepository = subjectRepository;
             _mapper = mapper;
         }
         [HttpGet]
@@ -68,12 +70,12 @@ namespace Web.API.Demo.Controllers
         }
         [HttpPost]
         [ProducesResponseType(200)]
-        public IActionResult CreateTeacher([FromBody] TeacherDto teacher)
+        public IActionResult CreateTeacher([FromQuery] int subjectId,[FromBody] TeacherDto teacher)
         {
-            if(teacher == null) return BadRequest(ModelState);
-            
+            if (teacher == null) return BadRequest(ModelState);
+
             var t = _teacherRepository.GetAllTeacher().Where(t => t.Name.Trim().ToUpper() == teacher.Name.Trim().ToUpper()).FirstOrDefault();
-            if(t != null)
+            if (t != null)
             {
                 ModelState.AddModelError("", "Already Exists");
                 return BadRequest(ModelState);
@@ -84,6 +86,7 @@ namespace Web.API.Demo.Controllers
                 return BadRequest(ModelState);
             }
             var createdTeacher = _mapper.Map<Teacher>(teacher);
+            createdTeacher.Subject = _subjectRepository.GetSubject(subjectId);
             if (!_teacherRepository.CreateTeacher(createdTeacher))
             {
                 ModelState.AddModelError("", "Smth went wrong while saving");
@@ -91,7 +94,8 @@ namespace Web.API.Demo.Controllers
             }
             return Ok("Successfully added");
         }
+
     }
-        
-    
+
+
 }

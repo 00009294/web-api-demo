@@ -73,7 +73,7 @@ namespace Web.API.Demo.Controllers
         }
         [HttpPost]
         [ProducesResponseType(200)]
-        public IActionResult CreateStudent([FromBody] SubjectDto subject)
+        public IActionResult CreateSubject([FromBody] SubjectDto subject)
         {
             if (subject == null) return BadRequest(ModelState);
             var sb = _subjectRepository.GetAllSubject().Where(s=>s.Name.Trim().ToUpper() == subject.Name.Trim().ToUpper()).FirstOrDefault();
