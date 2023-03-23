@@ -1,4 +1,5 @@
-﻿using Web.API.Demo.DbContexts;
+﻿using AutoMapper.Configuration.Annotations;
+using Web.API.Demo.DbContexts;
 using Web.API.Demo.Dto;
 using Web.API.Demo.Interfaces;
 using Web.API.Demo.Models;
@@ -39,8 +40,26 @@ namespace Web.API.Demo.Repositories
             return _appDbContext.Students.Where(s=>s.Id == id).Any();
         }
 
-        public bool CreateStudent(Student student)
+        public bool CreateStudent(int teacherId, int subjectId, Student student)
         {
+            var teacherEntity = _appDbContext.Teachers.Where(t => t.Id == teacherId).FirstOrDefault();
+            var subjectEntity = _appDbContext.Subjects.Where(s => s.Id == subjectId).FirstOrDefault();
+
+            var studentSubjects = new StudentSubject()
+            {
+                Subject = subjectEntity,
+                Student = student
+            };
+            _appDbContext.Add(studentSubjects);
+
+            var studentTeachers = new StudentTeacher()
+            {
+                Teacher = teacherEntity,
+                Student = student
+            };
+
+            _appDbContext.Add(studentTeachers);
+
             _appDbContext.Students.Add(student);
             return Save();
         }

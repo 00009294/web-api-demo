@@ -12,11 +12,15 @@ namespace Web.API.Demo.Controllers
     public class SubjectsController : ControllerBase
     {
         private readonly ISubjectRepository _subjectRepository;
+        private readonly ITeacherRepository _teacherRepository;
+        private readonly IStudentRepository _studentRepository;
         private readonly IMapper _mapper;
 
-        public SubjectsController(ISubjectRepository subjectRepository, IMapper mapper)
+        public SubjectsController(ISubjectRepository subjectRepository, ITeacherRepository teacherRepository, IStudentRepository studentRepository, IMapper mapper)
         {
             _subjectRepository = subjectRepository;
+            _teacherRepository = teacherRepository;
+            _studentRepository = studentRepository;
             _mapper = mapper;
         }
         [HttpGet]
@@ -73,7 +77,7 @@ namespace Web.API.Demo.Controllers
         }
         [HttpPost]
         [ProducesResponseType(200)]
-        public IActionResult CreateSubject([FromBody] SubjectDto subject)
+        public IActionResult CreateSubject([FromQuery]int teacherId, [FromQuery] int studentId, [FromBody] SubjectDto subject)
         {
             if (subject == null) return BadRequest(ModelState);
             var sb = _subjectRepository.GetAllSubject().Where(s=>s.Name.Trim().ToUpper() == subject.Name.Trim().ToUpper()).FirstOrDefault();
@@ -88,7 +92,9 @@ namespace Web.API.Demo.Controllers
                 return BadRequest(ModelState);
             }
             var createdSubject = _mapper.Map<Subject>(subject);
-            if (!_subjectRepository.CreateSubject(createdSubject))
+            createdSubject.Teachers = _teacherRepository.GetTeacher(teacherId);
+            _studentRepository.GetStudent(teacherId);
+            if(!_subjectRepository.CreateSubject(createdSubject))
             {
                 ModelState.AddModelError("", "Smth went wrong while saving");
                 return BadRequest(ModelState);      

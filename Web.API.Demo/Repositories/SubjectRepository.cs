@@ -1,4 +1,5 @@
-﻿using Web.API.Demo.DbContexts;
+﻿using AutoMapper.Configuration.Annotations;
+using Web.API.Demo.DbContexts;
 using Web.API.Demo.Interfaces;
 using Web.API.Demo.Models;
 
@@ -45,15 +46,43 @@ namespace Web.API.Demo.Repositories
             return _appDbContext.StudentSubjects.Where(st => st.Student.Id == studentId).Select(st => st.Subject).ToList();
         }
 
-        public bool CreateSubject(Subject subject)
-        {
-            _appDbContext.Subjects.Add(subject);
-            return Save();
-        }
+        //public bool CreateSubject(Subject subject)
+        //{
+        //    _appDbContext.Subjects.Add(subject);
+        //    return Save();
+        //}
 
         public bool Save()
         {
             return _appDbContext.SaveChanges() > 0 ? true : false;
+        }
+
+        public bool CreateSubject( Subject subject)
+        {
+            //var studentEntity = _appDbContext.Students.Where(s=>s.Id == studentId).FirstOrDefault();
+            //var teacherEntity = _appDbContext.Teachers.Where(t => t.Id == teacherId).FirstOrDefault();
+
+            //var teachers = new Teacher()
+            //{
+            //    StudentTeachers = teacherEntity,
+            //    Subject = subject
+            //};
+
+            //_appDbContext.Add(teachers);
+
+            // one to many relationships need to implement
+
+            //var teacherEntity = _appDbContext.Teachers.Where(t => t.Id == teacherId).FirstOrDefault();
+            //_appDbContext.Teachers.Add(teacherEntity);
+
+            //var students = new StudentSubject()
+            //{
+            //    Student = studentEntity,
+            //    Subject = subject
+            //};
+            //_appDbContext.Add(students);
+            _appDbContext.Subjects.Add(subject);
+            return Save();
         }
     }
 }
