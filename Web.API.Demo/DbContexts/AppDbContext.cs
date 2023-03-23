@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.Metrics;
 using Web.API.Demo.Models;
 
 namespace Web.API.Demo.DbContexts
@@ -9,11 +10,11 @@ namespace Web.API.Demo.DbContexts
         {
             
         }       
-        public DbSet<Student> Students { get; set; }
-        public DbSet<Subject> Subjects { get; set; }   
-        public DbSet<Teacher> Teachers { get; set; } 
-        public DbSet<StudentSubject> StudentSubjects { get; set; }
-        public DbSet<StudentTeacher> StudentTeachers { get; set; }
+        public DbSet<Student> Students { get; set; } = default!;
+        public DbSet<Subject> Subjects { get; set; } = default!;
+        public DbSet<Teacher> Teachers { get; set; } = default!;
+        public DbSet<StudentSubject> StudentSubjects { get; set; } = default!;
+        public DbSet<StudentTeacher> StudentTeachers { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,6 +40,8 @@ namespace Web.API.Demo.DbContexts
                 .HasOne(st => st.Teacher)
                 .WithMany(st => st.StudentTeachers)
                 .HasForeignKey(st => st.TeacherId);
+
+           
         }
     }
 }
