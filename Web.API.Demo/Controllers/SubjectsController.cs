@@ -77,11 +77,11 @@ namespace Web.API.Demo.Controllers
         }
         [HttpPost]
         [ProducesResponseType(200)]
-        public IActionResult CreateSubject([FromQuery]int teacherId, [FromQuery] int studentId, [FromBody] SubjectDto subject)
+        public IActionResult CreateSubject([FromBody] SubjectDto subject)
         {
             if (subject == null) return BadRequest(ModelState);
-            var sb = _subjectRepository.GetAllSubject().Where(s=>s.Name.Trim().ToUpper() == subject.Name.Trim().ToUpper()).FirstOrDefault();
-            if(sb != null)
+            var sb = _subjectRepository.GetAllSubject().Where(s => s.Name.Trim().ToUpper() == subject.Name.Trim().ToUpper()).FirstOrDefault();
+            if (sb != null)
             {
                 ModelState.AddModelError("", "Already exists");
                 return BadRequest(ModelState);
@@ -93,13 +93,29 @@ namespace Web.API.Demo.Controllers
             }
             var createdSubject = _mapper.Map<Subject>(subject);
             //createdSubject.Teachers = _teacherRepository.GetTeacher(teacherId);
-            
-            if(!_subjectRepository.CreateSubject(teacherId,studentId,createdSubject))
+
+            if (!_subjectRepository.CreateSubject(createdSubject))
             {
                 ModelState.AddModelError("", "Smth went wrong while saving");
-                return BadRequest(ModelState);      
+                return BadRequest(ModelState);
             }
             return Ok("Successfully added");
         }
+        [HttpPut("{subjectId}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult UpdateSubject(int subjectId, [FromBody] SubjectDto updatedSubject)
+        {
+            if (updatedSubject == null) return BadRequest(ModelState);
+            if (subjectId != updatedSubject.Id) return NotFound();
+            if (!_subjectRepository.IsExist(subjectId)) return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var subject = _mapper.Map<Subject>(updatedSubject);
+            if (!_subjectRepository.UpdateSubject(subject)) return BadRequest(ModelState);
+            return Ok("Successfully updated");
+        }
+
+
     }
 }

@@ -53,19 +53,25 @@ namespace Web.API.Demo.Repositories
             return _appDbContext.SaveChanges() > 0 ? true : false;
         }
 
-        public bool CreateSubject(int teacherId, int studentId, Subject subject)
+        public bool CreateSubject(Subject subject)
         {
-            var studentSubjectEntity = _appDbContext.Students.Where(s=>s.Id == studentId).FirstOrDefault();
-            var studentTeacherEntity = _appDbContext.Teachers.Where(t=>t.Id== studentId).FirstOrDefault();
-            var studentSubject = new StudentSubject()
-            {
-                Subject = subject,
-                Student = studentSubjectEntity
-            };
+            //var studentSubjectEntity = _appDbContext.Students.Where(s=>s.Id == studentId).FirstOrDefault();
+            //var studentTeacherEntity = _appDbContext.Teachers.Where(t=>t.Id== studentId).FirstOrDefault();
+            //var studentSubject = new StudentSubject()
+            //{
+            //    Subject = subject,
+            //    Student = studentSubjectEntity
+            //};
 
-            _appDbContext.Add(studentSubject);
-            _appDbContext.Add(studentTeacherEntity);
+            //_appDbContext.Add(studentSubject);
+            //_appDbContext.Add(studentTeacherEntity);
             _appDbContext.Subjects.Add(subject);
+            return Save();
+        }
+
+        public bool UpdateSubject(Subject subject)
+        {
+            _appDbContext.Update(subject);
             return Save();
         }
     }

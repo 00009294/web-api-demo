@@ -25,7 +25,7 @@ namespace Web.API.Demo.Controllers
         public IActionResult GetAllStudent()
         {
             var students = _mapper.Map<List<StudentDto>>(_studentRepository.GetAllStudent());
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 return Ok(students);
             }
@@ -37,7 +37,7 @@ namespace Web.API.Demo.Controllers
         [ProducesResponseType(400)]
         public IActionResult GetStudent(int id)
         {
-            if(!_studentRepository.IsExist(id))
+            if (!_studentRepository.IsExist(id))
             {
                 return NotFound();
             }
@@ -53,7 +53,7 @@ namespace Web.API.Demo.Controllers
         public IActionResult GetByName(string name)
         {
             var st = _mapper.Map<StudentDto>(_studentRepository.GetByName(name));
-            if(!ModelState.IsValid) return NotFound();
+            if (!ModelState.IsValid) return NotFound();
             return Ok(st);
         }
         [HttpGet("{IsMale}")]
@@ -62,15 +62,15 @@ namespace Web.API.Demo.Controllers
         public IActionResult GetByGender(bool IsMale)
         {
             var st = _mapper.Map<List<StudentDto>>(_studentRepository.GetByGender(IsMale));
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return Ok(st);  
+                return Ok(st);
             }
             return BadRequest(ModelState);
         }
         [HttpPost]
         [ProducesResponseType(200, Type = typeof(StudentDto))]
-        public IActionResult CreateStudent( [FromQuery] int teacherId, [FromQuery] int subjectId, [FromBody]StudentDto student)
+        public IActionResult CreateStudent([FromQuery] int teacherId, [FromQuery] int subjectId, [FromBody] StudentDto student)
         {
             if (student == null) return BadRequest(ModelState);
             var st = _studentRepository.GetAllStudent().Where(s => s.Name.Trim().ToUpper() == student.Name.Trim().ToUpper()).FirstOrDefault();
@@ -84,12 +84,31 @@ namespace Web.API.Demo.Controllers
                 return BadRequest(ModelState);
             }
             var createdStudent = _mapper.Map<Student>(student);
-            if (_studentRepository.CreateStudent(teacherId,subjectId,createdStudent))
-            { 
+            if (_studentRepository.CreateStudent(teacherId, subjectId, createdStudent))
+            {
                 return Ok("Successfully created");
             }
             ModelState.AddModelError("", "Smth went wrong while saving");
             return BadRequest(ModelState);
         }
+        [HttpPut("{studentId}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult UpdateStudent(int studentId, [FromBody] StudentDto updatedStudent)
+        {
+            if (updatedStudent == null) return BadRequest(ModelState);
+
+            if (studentId != updatedStudent.Id) return BadRequest(ModelState);
+
+            if (!_studentRepository.IsExist(studentId)) return NotFound();
+
+            if(!ModelState.IsValid) return BadRequest(ModelState);
+
+            var student = _mapper.Map<Student>(updatedStudent);
+            if(!_studentRepository.UpdateStudent(student)) return BadRequest(ModelState);
+
+            return Ok("Successfuly updated");
+        }
+        
     }
 }

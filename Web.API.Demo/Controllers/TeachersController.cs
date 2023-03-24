@@ -70,7 +70,7 @@ namespace Web.API.Demo.Controllers
         }
         [HttpPost]
         [ProducesResponseType(200)]
-        public IActionResult CreateTeacher([FromQuery] int subjectId,[FromBody] TeacherDto teacher)
+        public IActionResult CreateTeacher([FromQuery] int subjectId, [FromBody] TeacherDto teacher)
         {
             if (teacher == null) return BadRequest(ModelState);
 
