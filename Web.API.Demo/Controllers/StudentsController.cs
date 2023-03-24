@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.Configuration.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Web.API.Demo.Dto;
@@ -94,7 +95,7 @@ namespace Web.API.Demo.Controllers
         [HttpPut("{studentId}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult UpdateStudent(int studentId, [FromBody] StudentDto updatedStudent)
+        public IActionResult UpdateStudent([FromQuery] int teacherId, int subjectId ,int studentId, [FromBody] StudentDto updatedStudent)
         {
             if (updatedStudent == null) return BadRequest(ModelState);
 
@@ -105,9 +106,20 @@ namespace Web.API.Demo.Controllers
             if(!ModelState.IsValid) return BadRequest(ModelState);
 
             var student = _mapper.Map<Student>(updatedStudent);
-            if(!_studentRepository.UpdateStudent(student)) return BadRequest(ModelState);
+            if(!_studentRepository.UpdateStudent(teacherId, subjectId, student)) return BadRequest(ModelState);
 
             return Ok("Successfuly updated");
+        }
+        [HttpDelete("{studentId}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult DeleteStudent(int studentId) 
+        {
+            if(!_studentRepository.IsExist(studentId)) return NotFound();
+
+            var deletedStudent = _studentRepository.GetStudent(studentId);
+            if(!_studentRepository.DeleteStudent(deletedStudent)) return BadRequest(ModelState);
+            return Ok("Successfully deleted");
         }
         
     }

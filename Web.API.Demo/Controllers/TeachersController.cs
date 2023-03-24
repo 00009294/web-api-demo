@@ -2,6 +2,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using Web.API.Demo.DbContexts;
 using Web.API.Demo.Dto;
 using Web.API.Demo.Interfaces;
@@ -18,7 +19,7 @@ namespace Web.API.Demo.Controllers
         private readonly ISubjectRepository _subjectRepository;
         private readonly IMapper _mapper;
 
-        public TeachersController(ITeacherRepository teacherRepository,ISubjectRepository subjectRepository, IMapper mapper)
+        public TeachersController(ITeacherRepository teacherRepository, ISubjectRepository subjectRepository, IMapper mapper)
         {
             _teacherRepository = teacherRepository;
             _subjectRepository = subjectRepository;
@@ -94,7 +95,30 @@ namespace Web.API.Demo.Controllers
             }
             return Ok("Successfully added");
         }
+        [HttpPut("{teacherId}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult UpdateTeacher(int teacherId, [FromBody] TeacherDto updatedTeacher)
+        {
+            if (updatedTeacher == null) return BadRequest(ModelState);
+            if (teacherId != updatedTeacher.Id) return NotFound();
+            if (!_teacherRepository.IsExist(teacherId)) return NotFound();
+            if (!ModelState.IsValid) BadRequest(ModelState);
 
+            var teacher = _mapper.Map<Teacher>(updatedTeacher);
+            if (!_teacherRepository.UpdateTeacher(teacher)) return BadRequest(ModelState);
+            return Ok("Successfully updated");
+        }
+        [HttpDelete("{teacherId}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult DeleteTeacher(int teacherId)
+        {
+            if(!_teacherRepository.IsExist(teacherId)) return NotFound(ModelState);
+            var deletedTeacher = _teacherRepository.GetTeacher(teacherId);
+            if (!_teacherRepository.DeleteTeacher(deletedTeacher)) return BadRequest(ModelState);
+            return Ok("Successfully deleted");
+        }
     }
 
 

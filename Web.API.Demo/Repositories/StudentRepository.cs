@@ -79,9 +79,15 @@ namespace Web.API.Demo.Repositories
             return _appDbContext.SaveChanges()>0 ? true : false;
         }
 
-        public bool UpdateStudent(Student student)
+        public bool UpdateStudent(int studentId, int teacherId, Student student)
         {
             _appDbContext.Update(student);
+            return Save();
+        }
+
+        public bool DeleteStudent(Student student)
+        {
+            _appDbContext.Remove(student);
             return Save();
         }
     }

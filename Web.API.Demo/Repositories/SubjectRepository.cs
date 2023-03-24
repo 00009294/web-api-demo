@@ -74,5 +74,11 @@ namespace Web.API.Demo.Repositories
             _appDbContext.Update(subject);
             return Save();
         }
+
+        public bool DeleteSubject(Subject subject)
+        {
+            _appDbContext.Remove(subject);
+            return Save();
+        }
     }
 }

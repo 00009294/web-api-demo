@@ -7,6 +7,7 @@ namespace Web.API.Demo.Interfaces
         ICollection<Subject> GetAllSubject();
         bool CreateSubject(Subject subject);
         bool UpdateSubject(Subject subject);
+        bool DeleteSubject(Subject subject);
         Subject GetSubject(int id);
         Subject GetByName(string name);
         ICollection<Subject> GetByCore(bool IsCore);

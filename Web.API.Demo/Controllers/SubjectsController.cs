@@ -115,7 +115,16 @@ namespace Web.API.Demo.Controllers
             if (!_subjectRepository.UpdateSubject(subject)) return BadRequest(ModelState);
             return Ok("Successfully updated");
         }
-
+        [HttpDelete("{subjectId}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult DeleteStudent(int subjectId) 
+        {
+            if (!_subjectRepository.IsExist(subjectId)) return NotFound();
+            var deletedSubject = _subjectRepository.GetSubject(subjectId);
+            if (!_subjectRepository.DeleteSubject(deletedSubject)) return BadRequest(ModelState);
+            return Ok("Sucessfully deleted");
+        }
 
     }
 }

@@ -6,7 +6,8 @@ namespace Web.API.Demo.Interfaces
     {
         ICollection<Student> GetAllStudent();
         bool CreateStudent(int teacherId, int subjectId, Student student);
-        bool UpdateStudent(Student student);
+        bool UpdateStudent(int teacherId, int subjectId, Student student);
+        bool DeleteStudent(Student student);
         Student GetStudent(int id);
         Student GetByName(string name);
         ICollection<Student> GetByGender(bool isMale);

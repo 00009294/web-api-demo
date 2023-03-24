@@ -32,6 +32,12 @@ namespace Web.API.Demo.Repositories
             return Save();
         }
 
+        public bool DeleteTeacher(Teacher teacher)
+        {
+            _appDbContext.Remove(teacher);
+            return Save();
+        }
+
         public ICollection<Teacher> GetAllTeacher()
         {
             return _appDbContext.Teachers.ToList();
@@ -70,6 +76,12 @@ namespace Web.API.Demo.Repositories
         public bool Save()
         {
             return _appDbContext.SaveChanges() > 0 ? true : false;
+        }
+
+        public bool UpdateTeacher(Teacher teacher)
+        {
+            _appDbContext.Add(teacher);
+            return Save();
         }
     }
 }
