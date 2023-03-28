@@ -11,7 +11,7 @@ using Web.API.Demo.DbContexts;
 namespace Web.API.Demo.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230327053158_InitialCreate")]
+    [Migration("20230328173211_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

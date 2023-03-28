@@ -92,8 +92,7 @@ namespace Web.API.Demo.Controllers
                 return BadRequest(ModelState);
             }
             var createdSubject = _mapper.Map<Subject>(subject);
-            //createdSubject.Teachers = _teacherRepository.GetTeacher(teacherId);
-
+            
             if (!_subjectRepository.CreateSubject(createdSubject))
             {
                 ModelState.AddModelError("", "Smth went wrong while saving");

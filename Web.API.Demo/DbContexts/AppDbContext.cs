@@ -18,6 +18,11 @@ namespace Web.API.Demo.DbContexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Teacher>()
+                .HasOne<Subject>(t => t.Subject)
+                .WithMany(s => s.Teachers)
+                .HasForeignKey(t => t.SubjectId);
+
             modelBuilder.Entity<StudentSubject>()
                 .HasKey(ss => new { ss.StudentId, ss.SubjectId });
             modelBuilder.Entity<StudentSubject>()
